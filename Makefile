@@ -17,6 +17,7 @@ check-java:
 start-dynamodb: check-java
 	@echo "Starting DynamoDB Local..."
 	@java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb > /dev/null 2>&1 & \
+    echo $$! > dynamodb_local.pid
 
 # Run tests
 test: start-dynamodb
@@ -26,4 +27,15 @@ test: start-dynamodb
 # Clean up
 clean:
 	@echo "Stopping DynamoDB Local..."
-	@pkill -f DynamoDBLocal.jar || true
+	@if [ -f dynamodb_local.pid ]; then \
+		PID=$$(cat dynamodb_local.pid); \
+		if ps -p $$PID > /dev/null 2>&1; then \
+			kill $$PID; \
+			echo "DynamoDB Local stopped."; \
+		else \
+			echo "No process found with PID $$PID."; \
+		fi; \
+		rm -f dynamodb_local.pid; \
+	else \
+		echo "No PID file found. DynamoDB Local may not be running."; \
+	fi

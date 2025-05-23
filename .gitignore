@@ -26,3 +26,6 @@ go.work.sum
 
 # intellij
 .idea/*
+
+# unit test is creating tmp files, so ignore them
+dynamodb_local.pid

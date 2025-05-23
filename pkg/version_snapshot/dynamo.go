@@ -7,6 +7,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
@@ -28,13 +29,21 @@ type VersionSnapshotDynamoManager struct {
 }
 
 func NewVersionSnapshotDynamoManager(region, endpoint string) *VersionSnapshotDynamoManager {
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region), config.WithEndpointResolver(aws.EndpointResolverFunc(
-		func(service, region string) (aws.Endpoint, error) {
-			return aws.Endpoint{
-				URL:           endpoint,
-				SigningRegion: region,
-			}, nil
-		})))
+	credentials := aws.NewCredentialsCache(
+		// TODO - conditionally use this for local testing
+		credentials.NewStaticCredentialsProvider("dummy", "dummy", ""),
+	)
+	cfg, err := config.LoadDefaultConfig(context.TODO(),
+		config.WithRegion(region),
+		config.WithEndpointResolver(aws.EndpointResolverFunc(
+			func(service, region string) (aws.Endpoint, error) {
+				return aws.Endpoint{
+					URL:           endpoint,
+					SigningRegion: region,
+				}, nil
+			})),
+		config.WithCredentialsProvider(credentials),
+	)
 	if err != nil {
 		return nil
 	}

@@ -14,7 +14,7 @@ check-java:
 	fi
 
 # Run the local DynamoDB, redirecting output to /dev/null and using a subshell
-start-dynamodb:
+start-dynamodb: check-java
 	@echo "Starting DynamoDB Local..."
 	@java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb > /dev/null 2>&1 & \
 

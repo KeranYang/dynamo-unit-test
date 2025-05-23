@@ -1,6 +1,6 @@
 .PHONY: all test start-dynamodb check-java clean
 
-JAVA_VERSION := 11
+JAVA_VERSION := 21
 JAVA_PACKAGE := openjdk-$(JAVA_VERSION)-jdk
 
 # Check for Java installation

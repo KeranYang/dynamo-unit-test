@@ -12,3 +12,15 @@ dynamo-unit-test proposes a structured way of testing DynamoDB CRUD operations, 
 * Implements unit tests for DynamoDB implementation, which uses a local DynamoDB instance, without mocking 
   the DynamoDB client.
 * Enables CI to run unit tests.
+
+To run the tests, simply checkout the repository and run the following command:
+
+```bash
+make test
+```
+
+To clean up the local DynamoDB instance, run:
+
+```bash
+make clean
+```
